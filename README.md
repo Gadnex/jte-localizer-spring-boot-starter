@@ -1,6 +1,6 @@
 # jte-localizer-spring-boot-starter
 
-This project is a custom Spring Boot starter project with auto configuration.
+This project is a custom Spring Boot starter project.
 
 It is used to simplify text localization / internationalization when using the
 [Java Template Engine (JTE)](https://jte.gg) with Spring Boot.
@@ -37,15 +37,30 @@ The following needs to be done to user the starter on your project.
 
     dependencies {
         implementation 'gg.jte:jte-spring-boot-starter-3:3.1.16'
-        implementation 'io.github.gadnex:jte-localizer-spring-boot-starter:${jtelocalizerVersion}'
+        implementation 'io.github.gadnex:jte-localizer-spring-boot-starter:1.0.1'
     }
 ```
 
 ### Enable the plugin
 
-**Spring Boot application.properties**
-```properties
-    gg.jte.localizer.inject=true
+**Add the following Spring beans to your application**
+```java
+    @Bean
+    @RequestScope
+    public LocalizationSupport localizationSupport(MessageSource messageSource) {
+        return new SpringLocalizationSupport(messageSource, LocaleContextHolder.getLocale());
+    }
+    
+    @Bean
+    public ModelLocalizationInterceptor modelLocalizationInterceptor(
+            LocalizationSupport localizationSupport) {
+        return new ModelLocalizationInterceptor(localizationSupport);
+    }
+    
+    @Bean
+    public WebConfig webConfig(ModelLocalizationInterceptor modelLocalizationInterceptor) {
+        return new WebConfig(modelLocalizationInterceptor);
+    }
 ```
 
 ### Add gg.jte.support.LocalizationSupport param to JTE templates
@@ -84,7 +99,3 @@ customization of the default Spring Boot behaviour.
 The goal of this project is to have its functionality incorporated into the
 standard **jte-spring-boot-starter-3** so that this plugin will no longer be required
 in the future.
-
-This is the reason why the plugin needs to be specifically enabled in
-application.properties. We want the default behaviour to be for the 
-plugin to be disabled.
