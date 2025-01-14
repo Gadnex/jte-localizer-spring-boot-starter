@@ -12,6 +12,12 @@ plugins {
 group = 'io.github.gadnex'
 version = scmVersion.version
 
+scmVersion {
+    tag {
+        prefix.set("")
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -49,12 +55,6 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(Jar) {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-scmVersion {
-    tag {
-        prefix.set("")
-    }
 }
 
 spotless {
