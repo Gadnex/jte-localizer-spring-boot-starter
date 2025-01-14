@@ -45,7 +45,7 @@ The following needs to be done to user the starter on your project.
 
 **Spring Boot application.properties**
 ```properties
-    gg.jte.localizer.inject: true
+    gg.jte.localizer.inject=true
 ```
 
 ### Add gg.jte.support.LocalizationSupport param to JTE templates
