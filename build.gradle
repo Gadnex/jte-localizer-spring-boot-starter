@@ -30,7 +30,7 @@ dependencyManagement {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'gg.jte:jte:3.1.15'
+    implementation 'gg.jte:jte:3.1.16'
     annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
 }
 
