@@ -9,14 +9,14 @@ plugins {
     id 'com.diffplug.spotless' version '7.0.0.BETA4'
 }
 
-group = 'io.github.gadnex'
-version = scmVersion.version
-
 scmVersion {
     tag {
         prefix.set("")
     }
 }
+
+group = 'io.github.gadnex'
+version = scmVersion.version
 
 java {
     toolchain {
