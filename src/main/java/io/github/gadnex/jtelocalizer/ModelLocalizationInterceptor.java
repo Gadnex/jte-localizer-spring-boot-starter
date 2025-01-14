@@ -6,10 +6,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+/** HandlerInterceptor to insert localizer into modelAndView */
 public class ModelLocalizationInterceptor implements HandlerInterceptor {
 
   private final LocalizationSupport localizer;
 
+  /**
+   * Constructor
+   *
+   * @param localizer The localizer
+   */
   public ModelLocalizationInterceptor(final LocalizationSupport localizer) {
     this.localizer = localizer;
   }
