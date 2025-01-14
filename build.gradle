@@ -51,6 +51,12 @@ tasks.withType(Jar) {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
+scmVersion {
+    tag {
+        prefix.set("")
+    }
+}
+
 spotless {
     java {
         googleJavaFormat()
