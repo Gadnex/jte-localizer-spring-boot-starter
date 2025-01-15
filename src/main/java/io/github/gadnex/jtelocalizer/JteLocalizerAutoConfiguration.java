@@ -2,7 +2,7 @@ package io.github.gadnex.jtelocalizer;
 
 import gg.jte.support.LocalizationSupport;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -27,35 +27,30 @@ public class JteLocalizerAutoConfiguration {
   }
 
   /**
-   * Request scoped LocalizationSupport bean
-   *
-   * @return LocalizationSupport
-   */
-  @Bean
-  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
-  public LocalizationSupport localizationSupport() {
-    return new SpringLocalizationSupport(messageSource);
-  }
-
-  /**
-   * HandlerInterceptor bean
-   *
-   * @return ModelLocalizationInterceptor
-   */
-  @Bean
-  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
-  public ModelLocalizationInterceptor modelLocalizationInterceptor() {
-    return new ModelLocalizationInterceptor(localizationSupport());
-  }
-
-  /**
    * WebMvcConfigurer bean to register ModelLocalizationInterceptor
    *
    * @return WebConfig
    */
   @Bean
-  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
+  @ConditionalOnMissingBean
   public WebConfig webConfig() {
-    return new WebConfig(modelLocalizationInterceptor());
+    if (jteProperties.isInject()) {
+      return new WebConfig(modelLocalizationInterceptor());
+    }
+    return null;
+  }
+
+  private ModelLocalizationInterceptor modelLocalizationInterceptor() {
+    if (jteProperties.isInject()) {
+      return new ModelLocalizationInterceptor(localizationSupport());
+    }
+    return null;
+  }
+
+  private LocalizationSupport localizationSupport() {
+    if (jteProperties.isInject()) {
+      return new SpringLocalizationSupport(messageSource);
+    }
+    return null;
   }
 }
