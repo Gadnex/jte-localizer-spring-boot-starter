@@ -2,11 +2,10 @@ package io.github.gadnex.jtelocalizer;
 
 import gg.jte.support.LocalizationSupport;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.web.context.annotation.RequestScope;
 
 /** Spring Boot AutoConfiguration class */
 @AutoConfiguration
@@ -19,7 +18,7 @@ public class JteLocalizerAutoConfiguration {
   /**
    * Constructor
    *
-   * @param jteProperties JTe properties configuration class
+   * @param jteProperties JTE properties configuration class
    * @param messageSource Spring Boot MessageSource for localization
    */
   public JteLocalizerAutoConfiguration(JteProperties jteProperties, MessageSource messageSource) {
@@ -33,12 +32,9 @@ public class JteLocalizerAutoConfiguration {
    * @return LocalizationSupport
    */
   @Bean
-  @RequestScope
+  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
   public LocalizationSupport localizationSupport() {
-    if (jteProperties.isInject()) {
-      return new SpringLocalizationSupport(messageSource, LocaleContextHolder.getLocale());
-    }
-    return null;
+    return new SpringLocalizationSupport(messageSource);
   }
 
   /**
@@ -47,11 +43,9 @@ public class JteLocalizerAutoConfiguration {
    * @return ModelLocalizationInterceptor
    */
   @Bean
+  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
   public ModelLocalizationInterceptor modelLocalizationInterceptor() {
-    if (jteProperties.isInject()) {
-      return new ModelLocalizationInterceptor(localizationSupport());
-    }
-    return null;
+    return new ModelLocalizationInterceptor(localizationSupport());
   }
 
   /**
@@ -60,10 +54,8 @@ public class JteLocalizerAutoConfiguration {
    * @return WebConfig
    */
   @Bean
+  @ConditionalOnProperty(prefix = "gg.jte.localizer", name = "inject", havingValue = "true")
   public WebConfig webConfig() {
-    if (jteProperties.isInject()) {
-      return new WebConfig(modelLocalizationInterceptor());
-    }
-    return null;
+    return new WebConfig(modelLocalizationInterceptor());
   }
 }
